@@ -30,13 +30,14 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.jsoup:jsoup:1.15.3")
     implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql:1.19.3")
+    testImplementation("com.h2database:h2:2.3.232")
+    testImplementation("org.testcontainers:junit-jupiter:1.19.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

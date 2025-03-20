@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Number Country Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phone Number Country Detector</h1>
+        <div class="input-group">
+            <input type="text" id="phoneNumber" placeholder="Enter phone number (e.g., +12423222931)">
+        </div>
+        <button onclick="detectCountry()">Detect Country</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function detectCountry() {
+            let phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!phoneNumber.startsWith('+')) {
+                phoneNumber = '+' + phoneNumber;
+            }
+
+            fetch(`/phone/country?phoneNumber=${encodeURIComponent(phoneNumber)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(html => {
+                            throw new Error(`HTTP error! Status: ${response.status}, Response: ${html}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resultDiv.className = 'success';
+                    if (Array.isArray(data)) {
+                        resultDiv.textContent = data.map(country =>
+                            `Страна: ${country.country}, Код: ${country.telCode}`
+                        ).join('\n');
+                    } else {
+                        resultDiv.textContent = `Страна: ${data.country}, Код: ${data.telCode}`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.className = 'error';
+                    resultDiv.textContent = error.message || 'Произошла ошибка при обработке запроса';
+                    console.error('Ошибка:', error);
+                });
+        }
+
+    </script>
+</body>
+</html> 
